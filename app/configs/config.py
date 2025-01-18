@@ -1,4 +1,5 @@
-from typing import Final
+import os
+from typing import Final, Optional
 from redis import Redis
 from datetime import timedelta
 from app.utils.types import SessionType
@@ -6,6 +7,8 @@ from app.utils.environments import get_env
 
 
 class Config:
+	"""For general configuration"""
+
 	# General configuration
 	__SECRET_KEY: Final[str] = get_env('SECRET_KEY')
 	_DEBUG: bool = False
@@ -17,12 +20,13 @@ class Config:
 
 	# Session configuration
 	_SESSION_TYPE: SessionType = 'redis'
-	_SESSION_REDIS: Final[Redis] = Redis(
+	_SESSION_REDIS: Optional[Redis] = Redis(
 		host=get_env('REDIS_HOST'),
 		port=int(get_env('REDIS_PORT')),
 		password=get_env('REDIS_PASSWORD'),
 		ssl=True
 	)
+	__SESSION_FILE_DIR: Final[str] = os.path.join(os.getcwd(), 'flask_session')
 	__SESSION_PERMANENT: Final[bool] = False
 	__SESSION_USER_SIGNER: Final[bool] = True
 	__SESSION_KEY_PREFIX: Final[str] = 'session:'
