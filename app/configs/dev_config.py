@@ -5,9 +5,8 @@ class DevConfig(Config):
 	"""For local development environment"""
 
 	# General configuration
-	_DEBUG = True
-	_TESTING = False
+	DEBUG: bool = True
+	TESTING: bool = False
 
 	# Session configuration
-	_SESSION_TYPE = 'filesystem'
-	_SESSION_REDIS = None
+	SESSION_TYPE = 'filesystem'

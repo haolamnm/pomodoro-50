@@ -1,6 +1,7 @@
 import os
 from typing import Final, Optional
 from redis import Redis
+from functools import lru_cache
 from datetime import timedelta
 from app.utils.types import SessionType
 from app.utils.environments import get_env
@@ -10,39 +11,47 @@ class Config:
 	"""For general configuration"""
 
 	# General configuration
-	__SECRET_KEY: Final[str] = get_env('SECRET_KEY')
-	_DEBUG: bool = False
-	_TESTING: bool = False
+	SECRET_KEY: Final[str] = get_env('SECRET_KEY')
+	DEBUG: bool = False
+	TESTING: bool = False
 
 	# Database configuration
-	__SQLALCHEMY_DATABASE_URI: Final[str] = get_env('SQLALCHEMY_DATABASE_URI')
-	__SQLALCHEMY_TRACK_MODIFICATIONS: Final[bool] = False
+	SQLALCHEMY_DATABASE_URI: str = get_env('SQLALCHEMY_DATABASE_URI')
+	SQLALCHEMY_TRACK_MODIFICATIONS: Final[bool] = False
 
 	# Session configuration
-	_SESSION_TYPE: SessionType = 'redis'
-	_SESSION_REDIS: Optional[Redis] = Redis(
-		host=get_env('REDIS_HOST'),
-		port=int(get_env('REDIS_PORT')),
-		password=get_env('REDIS_PASSWORD'),
-		ssl=True
-	)
-	__SESSION_FILE_DIR: Final[str] = os.path.join(os.getcwd(), 'flask_session')
-	__SESSION_PERMANENT: Final[bool] = False
-	__SESSION_USER_SIGNER: Final[bool] = True
-	__SESSION_KEY_PREFIX: Final[str] = 'session:'
-	__PERMANENT_SESSION_LIFETIME: Final[timedelta] = timedelta(weeks=1)
+	SESSION_TYPE: SessionType = 'redis'
+	SESSION_FILE_DIR: Final[str] = os.path.join(os.getcwd(), 'flask_session')
+	SESSION_PERMANENT: Final[bool] = False
+	SESSION_USER_SIGNER: Final[bool] = True
+	SESSION_KEY_PREFIX: Final[str] = 'session:'
+	PERMANENT_SESSION_LIFETIME: Final[timedelta] = timedelta(weeks=1)
+
+	# Redis configuration
+	@property
+	@lru_cache(maxsize=1)
+	def SESSION_REDIS(self) -> Optional[Redis]:
+		"""Lazy initialization of Redis connection"""
+		if self.SESSION_TYPE == 'redis':
+			return Redis(
+				host=get_env('REDIS_HOST'),
+				port=int(get_env('REDIS_PORT')),
+				password=get_env('REDIS_PASSWORD'),
+				ssl=True
+			)
+		return None
 
 	# Google OAuth configuration
-	__GOOGLE_CLIENT_ID: Final[str] = get_env('GOOGLE_CLIENT_ID')
-	__GOOGLE_CLIENT_SECRET: Final[str] = get_env('GOOGLE_CLIENT_SECRET')
+	GOOGLE_CLIENT_ID: Final[str] = get_env('GOOGLE_CLIENT_ID')
+	GOOGLE_CLIENT_SECRET: Final[str] = get_env('GOOGLE_CLIENT_SECRET')
 
 	# Github OAuth configuration
-	__GITHUB_CLIENT_ID: Final[str] = get_env('GITHUB_CLIENT_ID')
-	__GITHUB_CLIENT_SECRET: Final[str] = get_env('GITHUB_CLIENT_SECRET')
+	GITHUB_CLIENT_ID: Final[str] = get_env('GITHUB_CLIENT_ID')
+	GITHUB_CLIENT_SECRET: Final[str] = get_env('GITHUB_CLIENT_SECRET')
 
 	# Mail configuration
-	__MAIL_SERVER: Final[str] = get_env('MAIL_SERVER')
-	__MAIL_PORT: Final[int] = int(get_env('MAIL_PORT'))
-	__MAIL_USE_TLS: Final[bool] = True
-	__MAIL_USERNAME: Final[str] = get_env('MAIL_USERNAME')
-	__MAIL_PASSWORD: Final[str] = get_env('MAIL_PASSWORD')
+	MAIL_SERVER: Final[str] = get_env('MAIL_SERVER')
+	MAIL_PORT: Final[int] = int(get_env('MAIL_PORT'))
+	MAIL_USE_TLS: Final[bool] = True
+	MAIL_USERNAME: Final[str] = get_env('MAIL_USERNAME')
+	MAIL_PASSWORD: Final[str] = get_env('MAIL_PASSWORD')
