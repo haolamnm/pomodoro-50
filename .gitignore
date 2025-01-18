@@ -1,0 +1,31 @@
+# Byte-compiled
+__pycache__/
+*.pyc
+*.py[cod]
+
+# Flask-Session
+flask_session/*
+!flask_session/.gitkeep
+flask_cache/*
+!flask_cache/.gitkeep
+
+# Flask-SQLAlchemy
+migrations/
+instance/
+
+# Environment
+.env
+.venv
+env/
+venv/
+
+# VSCode
+.vscode/
+
+# Pytest
+.pytest_cache/
+
+# Logs
+app/logs/*
+!app/logs/.gitkeep
+!app/logs/prompt.txt
