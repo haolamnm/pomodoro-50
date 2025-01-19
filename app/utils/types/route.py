@@ -1,14 +1,13 @@
-from typing import TypedDict, Literal
+from typing import Literal
 from flask import Response
+from werkzeug.wrappers import Response as Redirect
 
 
-class RouteData(TypedDict):
-	message: str
-	category: Literal['success', 'info', 'warning', 'danger']
-	redirect: str
+# Corrected type alias for status codes
+type StatusCode = Literal[200, 301, 404, 500]
 
+# General response with status code
+type GenericResponse = tuple[Response, StatusCode]
 
-type StausCode = Literal[200, 301, 400, 401, 403, 404, 500]
-
-
-type RouteResponse = tuple[Response, StausCode]
+# Redirect response with status code
+type RedirectResponse = tuple[Redirect, StatusCode]
