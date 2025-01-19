@@ -1,4 +1,4 @@
 from typing import Literal
 
 
-SessionType = Literal['redis', 'filesystem']
+type SessionType = Literal['redis', 'filesystem']
