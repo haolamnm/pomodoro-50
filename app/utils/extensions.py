@@ -1,3 +1,4 @@
+import logging
 from flask import Flask
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -22,6 +23,7 @@ mail: Mail = Mail()
 oauth: OAuth = OAuth()
 session: Session = Session()
 migrate: Migrate = Migrate()
+stream_handler = logging.StreamHandler()
 
 
 def init_extensions(app: Flask) -> None:
@@ -30,6 +32,9 @@ def init_extensions(app: Flask) -> None:
 	oauth.init_app(app)
 	session.init_app(app)
 	migrate.init_app(app, db)
+	stream_handler.setLevel(logging.INFO)
+	app.logger.addHandler(stream_handler)
+	app.logger.setLevel(logging.INFO)
 
 
 def init_google(app: Flask) -> None:
