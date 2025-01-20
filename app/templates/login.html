@@ -15,33 +15,33 @@ Login
 	<!-- Login with email -->
 	<form action="{{ url_for('login.email') }}" method="post">
 		<!-- CSRF Token -->
-		{{ form.hidden_tag() }}
+		{{ login_email_form.hidden_tag() }}
 
 		<!-- Email -->
 		<div class="mb-1 input-group">
 			<span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
-			{{ form.email(class="form-control mx-auto w-auto", placeholder="Email", autofocus=True) }}
+			{{ login_email_form.email(class="form-control mx-auto w-auto", placeholder="Email", autofocus=True) }}
 		</div>
-		{% if form.email.errors %}
+		{% if login_email_form.email.errors %}
 		<div class="text-danger small">
-			{{ form.email.errors[0] }}
+			{{ login_email_form.email.errors[0] }}
 		</div>
 		{% endif %}
 
 		<!-- Password -->
 		<div class="mb-1 mt-3 input-group">
 			<span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
-			{{ form.password(class="form-control mx-auto w-50 password-toggle", placeholder="Password") }}
+			{{ login_email_form.password(class="form-control mx-auto w-50 password-toggle", placeholder="Password") }}
 		</div>
-		{% if form.password.errors %}
+		{% if login_email_form.password.errors %}
 		<div class="text-danger small">
-			{{ form.password.errors[0] }}
+			{{ login_email_form.password.errors[0] }}
 		</div>
 		{% endif %}
 
 		<!-- Submit Button -->
 		<div class="text-center mt-3">
-			{{ form.submit }}
+			{{ login_email_form.submit() }}
 		</div>
 
 		<!-- Create an account and Forgot password -->
@@ -51,7 +51,7 @@ Login
 					<p class="text-start"><a href="{{ url_for('signup.email') }}">Create an account</a></p>
 				</div>
 				<div class="col-6">
-					<p class="text-end"><a href="{{ url_for('profile.reset_password') }}">Forgot your password?</a></p>
+					<p class="text-end"><a href="{{ url_for('profile.reset_password_request') }}">Forgot your password?</a></p>
 				</div>
 			</div>
 		</div>
@@ -66,22 +66,22 @@ Login
 
 			<!-- Login with Google -->
 			<div class="col-6">
-				<form action="#" method="get">
+				<form action="{{ url_for('login.google') }}" method="post">
+					<!-- CSRF Token -->
+					{{ login_google_form.hidden_tag() }}
 					<div class="mb-3 input-group">
-						<button class="btn btn-outline-danger w-100" type="submit">
-							<i class="fa-brands fa-google"></i> Google
-						</button>
+						{{ login_google_form.submit() }}
 					</div>
 				</form>
 			</div>
 
 			<!-- Login with GitHub API -->
 			<div class="col-6">
-				<form action="#" method="get">
+				<form action="{{ url_for('login.github') }}" method="post">
+					<!-- CSRF Token -->
+					{{ login_github_form.hidden_tag() }}
 					<div class="mb-3 input-group">
-						<button class="btn btn-outline-light w-100" type="submit">
-							<i class="fa-brands fa-github"></i> GitHub
-						</button>
+						{{ login_github_form.submit() }}
 					</div>
 				</form>
 			</div>
