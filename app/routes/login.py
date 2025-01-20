@@ -7,7 +7,6 @@ from app.utils.types.route import RedirectResponse, RenderResponse
 login: Final[Blueprint] = Blueprint('login', __name__)
 
 
-@login.route('/', methods=['GET', 'POST'], endpoint='index')
 @login.route('/email', methods=['GET', 'POST'])
 def email() -> RenderResponse | RedirectResponse:
 	if 'user_id' in session:
