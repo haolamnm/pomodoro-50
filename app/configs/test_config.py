@@ -10,6 +10,7 @@ class TestConfig(Config):
 
 	# Session configuration
 	SESSION_TYPE = 'filesystem'
+	SESSION_REDIS = None
 
 	# Database configuration
 	SQLALCHEMY_DATABASE_URI: str = 'sqlite:///:memory:'

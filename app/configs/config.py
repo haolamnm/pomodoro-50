@@ -28,18 +28,12 @@ class Config:
 	PERMANENT_SESSION_LIFETIME: Final[timedelta] = timedelta(weeks=1)
 
 	# Redis configuration
-	@property
-	@lru_cache(maxsize=1)
-	def SESSION_REDIS(self) -> Optional[Redis]:
-		"""Lazy initialization of Redis connection"""
-		if self.SESSION_TYPE == 'redis':
-			return Redis(
-				host=get_env('REDIS_HOST'),
-				port=int(get_env('REDIS_PORT')),
-				password=get_env('REDIS_PASSWORD'),
-				ssl=True
-			)
-		return None
+	SESSION_REDIS: Optional[Redis] = Redis(
+		host=get_env('REDIS_HOST'),
+		port=int(get_env('REDIS_PORT')),
+		password=get_env('REDIS_PASSWORD'),
+		ssl=True
+	)
 
 	# Google OAuth configuration
 	GOOGLE_CLIENT_ID: Final[str] = get_env('GOOGLE_CLIENT_ID')

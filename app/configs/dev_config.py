@@ -10,3 +10,4 @@ class DevConfig(Config):
 
 	# Session configuration
 	SESSION_TYPE = 'filesystem'
+	SESSION_REDIS = None
