@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block main %}
+<div class="container w-100 w-md-50 bg-dark border rounded shadow p-3">
+	<!-- Heading -->
+	<h3 class="text-light">Login here!</h3>
+	<p class="text-secondary text-center mb-3">
+		Welcome back you've been missed! Please log in to continue.
+	</p>
+
+	<!-- Login with email -->
+	<form action="{{ url_for('login.email') }}" method="post">
+		<!-- CSRF Token -->
+		{{ form.hidden_tag() }}
+
+		<!-- Email -->
+		<div class="mb-1 input-group">
+			<span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+			{{ form.email(class="form-control mx-auto w-auto", placeholder="Email", autofocus=True) }}
+		</div>
+		{% if form.email.errors %}
+		<div class="text-danger small">
+			{{ form.email.errors[0] }}
+		</div>
+		{% endif %}
+
+		<!-- Password -->
+		<div class="mb-1 mt-3 input-group">
+			<span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+			{{ form.password(class="form-control mx-auto w-50 password-toggle", placeholder="Password") }}
+			<button class="btn btn-outline-secondary input-group-text password-eye" type="button"
+				onclick="togglePasswordVisibility(this)">
+				<i class="fa-solid fa-eye-slash"></i>
+			</button>
+		</div>
+		{% if form.password.errors %}
+		<div class="text-danger small">
+			{{ form.password.errors[0] }}
+		</div>
+		{% endif %}
+
+		<!-- Submit Button -->
+		<div class="text-center mt-3">
+			{{ form.submit }}
+		</div>
+	</form>
+
+	<p class="text-center text-secondary mt-3">
+		Or continue with
+	</p>
+
+	<div class="container mt-3">
+		<div class="row">
+
+			<!-- Login with Google -->
+			<div class="col-6">
+				<form action="#" method="get">
+					<div class="mb-3 input-group">
+						<button class="btn btn-outline-danger w-100" type="submit">
+							<i class="fa-brands fa-google"></i> Google
+						</button>
+					</div>
+				</form>
+			</div>
+
+			<!-- Login with GitHub API -->
+			<div class="col-6">
+				<form action="#" method="get">
+					<div class="mb-3 input-group">
+						<button class="btn btn-outline-light w-100" type="submit">
+							<i class="fa-brands fa-github"></i> GitHub
+						</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="/static/js/main.js" defer></script>
+{% endblock %}
