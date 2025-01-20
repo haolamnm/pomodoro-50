@@ -1,11 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, ValidationError
-from wtforms.validators import DataRequired, Email
-from app.models import User
+from wtforms.fields import StringField, PasswordField, SubmitField, HiddenField
+from wtforms.validators import DataRequired, Email, ValidationError
+from app.models.user import User
 from app.utils.exceptions.user import UserEmailNotFoundError
 
 
 class LoginEmailForm(FlaskForm):
+	form_name: HiddenField = HiddenField(
+		'form_name',
+		default='login_email_form'
+	)
 	email: StringField = StringField(
 		label='Email',
 		validators=[
@@ -20,7 +24,7 @@ class LoginEmailForm(FlaskForm):
 		]
 	)
 	submit: SubmitField = SubmitField(
-		label='Email login',
+		label='Login',
 		render_kw={"class": "btn btn-primary", "style": "width: 100%;"}
 	)
 

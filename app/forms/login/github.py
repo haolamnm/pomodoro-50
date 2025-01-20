@@ -1,9 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField
+from wtforms.fields import SubmitField, HiddenField
 
 
 class LoginGitHubForm(FlaskForm):
+	form_name: HiddenField = HiddenField(
+		'form_name',
+		default='login_github_form'
+	)
 	submit: SubmitField = SubmitField(
-		label='GitHub login',
+		label='GitHub',
 		render_kw={"class": "btn btn-outline-light", "style": "width: 100%;"}
 	)
