@@ -83,6 +83,18 @@ class User(db.Model):
 
 	pomodoros = db.relationship('Pomodoro', backref='user', lazy=True)
 
+
+	def __init__(self, email: str, password: str, **kwargs) -> None:
+		self.email = email
+		self.set_password(password)
+		for key, value in kwargs.items():
+			setattr(self, key, value)
+
+	def create(self) -> None:
+		"""Create the user in the database"""
+		db.session.add(self)
+		db.session.commit()
+
 	def set_session(self) -> None:
 		"""Set the session for the user"""
 		session['user_id'] = self.id
@@ -91,8 +103,9 @@ class User(db.Model):
 	# def set_token() -> None:
 	# def verify_token(token: str) -> bool:
 
-	def set_password(self, password: str) -> None:
-		self.password = generate_password_hash(password)
+	def set_password(self, raw_password: str) -> None:
+		"""Set the password hash"""
+		self.password = generate_password_hash(raw_password)
 
 	def verify_password(self, password: str) -> bool:
 		"""Check the password against the stored hash"""
