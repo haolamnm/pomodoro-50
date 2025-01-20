@@ -1,3 +1,3 @@
-from app.forms.login.email import LoginEmailForm
-from app.forms.login.google import LoginGoogleForm
-from app.forms.login.github import LoginGitHubForm
+from app.forms.login.login_email import LoginEmailForm
+from app.forms.login.login_google import LoginGoogleForm
+from app.forms.login.login_github import LoginGitHubForm
