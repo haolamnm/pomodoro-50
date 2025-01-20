@@ -31,10 +31,55 @@
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbar">
-				<ul class="navbar-nav ms-auto mt-2">
-					<li class="nav-item"><a class="nav-link" href="{{ url_for('signup.email') }}">Signup</a></li>
-					<li class="nav-item"><a class="nav-link" href="{{ url_for('login.email') }}">Login</a></li>
+				{% if 'user_id' in session %}
+				<ul class="navbar-nav me-auto mt-2">
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('login.email') }}">
+							Insights
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('login.email') }}">
+							History
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('login.email') }}">
+							Settings
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('login.email') }}">
+							About
+						</a>
+					</li>
 				</ul>
+				<ul class="navbar-nav ms-auto mt-2">
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('signup.email') }}">
+							Profile
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('logout.email') }}">
+							Logout
+						</a>
+					</li>
+				</ul>
+				{% else %}
+				<ul class="navbar-nav ms-auto mt-2">
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('signup.email') }}">
+							Signup
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('login.email') }}">
+							Login
+						</a>
+					</li>
+				</ul>
+				{% endif %}
 			</div>
 		</div>
 	</nav>
