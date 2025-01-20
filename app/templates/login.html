@@ -32,10 +32,6 @@ Login
 		<div class="mb-1 mt-3 input-group">
 			<span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
 			{{ form.password(class="form-control mx-auto w-50 password-toggle", placeholder="Password") }}
-			<button class="btn btn-outline-secondary input-group-text password-eye" type="button"
-				onclick="togglePasswordVisibility(this)">
-				<i class="fa-solid fa-eye-slash"></i>
-			</button>
 		</div>
 		{% if form.password.errors %}
 		<div class="text-danger small">
@@ -46,6 +42,18 @@ Login
 		<!-- Submit Button -->
 		<div class="text-center mt-3">
 			{{ form.submit }}
+		</div>
+
+		<!-- Create an account and Forgot password -->
+		<div class="container mt-3">
+			<div class="row">
+				<div class="col-6">
+					<p class="text-start"><a href="{{ url_for('signup.email') }}">Create an account</a></p>
+				</div>
+				<div class="col-6">
+					<p class="text-end"><a href="{{ url_for('profile.reset_password') }}">Forgot your password?</a></p>
+				</div>
+			</div>
 		</div>
 	</form>
 
@@ -82,8 +90,4 @@ Login
 	</div>
 
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script type="module" src="/static/js/main.js" defer></script>
 {% endblock %}
