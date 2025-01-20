@@ -1,8 +1,11 @@
 from typing import Final, Optional, Self
-from flask import session
+from flask import url_for, render_template, session
+from flask_mail import Message
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
+from app.utils.environments import get_env
 from app.utils.extensions import db
 from app.utils.exceptions.user import UserEmailNotFoundError, UserIdNotFoundError
 
@@ -105,8 +108,24 @@ class User(db.Model):
 		session['user_id'] = self.id
 		session['user_email'] = self.email
 
-	# def set_token() -> None:
-	# def verify_token(token: str) -> bool:
+	def set_token(self) -> str:
+		serializer: Serializer = Serializer(get_env('SECRET_KEY'))
+		data: dict[str, int] = {'user_id': self.id}
+		token: str = serializer.dumps(data)
+		return token
+
+	@staticmethod
+	def verify_token(token: str) -> 'User':
+		serializer: Serializer = Serializer(get_env('SECRET_KEY'))
+		try:
+			data: dict[str, int] = serializer.loads(token)
+			if not 'user_id' in data:
+				raise KeyError('User ID not found in token')
+			user_id: int = data['user_id']
+			user: 'User' = User.get_by_id(user_id)
+			return user
+		except (KeyError, UserIdNotFoundError, Exception) as e:
+			raise ValueError('Token is invalid') from e
 
 	def set_password(self, raw_password: str) -> None:
 		"""Set the password hash"""
@@ -117,6 +136,32 @@ class User(db.Model):
 		if isinstance(self.password, str):
 			return check_password_hash(self.password, password)
 		return False
+
+	def create_reset_password_email(self) -> Message:
+		"""Create the reset password email"""
+		token: str = self.set_token()
+		msg: Message = Message(
+			subject='[Pomodoro 50] Reset Password Request',
+			sender=get_env('MAIL_USERNAME'),
+			recipients=[self.email]
+		)
+		reset_password_url: str = url_for(
+			'profile.reset_password_token',
+			token=token,
+			_external=True
+		)
+		msg.body = render_template(
+			'emails/reset_password_email.txt',
+			email=self.email,
+			reset_password_url=reset_password_url
+		)
+		msg.html = render_template(
+			'emails/reset_password_email.html',
+			email=self.email,
+			reset_password_url=reset_password_url
+		)
+
+		return msg
 
 	@classmethod
 	def get_by_email(cls, email: str) -> Self:
