@@ -1,1 +1,2 @@
-from app.forms.login import LoginForm
+from app.forms.login import *
+from app.forms.signup import *
