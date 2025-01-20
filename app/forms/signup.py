@@ -1,33 +1,45 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
+from app.models.user import User
 
 
-class SignupForm(FlaskForm):
+class SignupEmailForm(FlaskForm):
 	email: StringField = StringField(
 		label='Email',
 		validators=[
-			DataRequired(),
-			Email(),
-			Length(max=255)
+			DataRequired(message='Email is required'),
+			Email(message='Email is invalid'),
+			Length(
+				max=255,
+				message='Email must be less than 255 characters'
+			)
 		] # Database only supports 255 characters
 	)
 	password: PasswordField = PasswordField(
 		label='Password',
 		validators=[
-			DataRequired(),
-			Length(min=8, max=255)
+			DataRequired(message='Password is required'),
+			Length(
+				min=8,
+				max=255,
+				message='Password must be between 8 and 255 characters'
+			)
 		]
 	)
 	confirm_password: PasswordField = PasswordField(
 		label='Password confirmation',
 		validators=[
-			DataRequired(),
+			DataRequired(message='Password confirmation is required'),
 			EqualTo(
 				fieldname='password',
-				message='Passwords must match.'
+				message='Passwords must match'
 			),
-			Length(min=8, max=255)
+			Length(
+				min=8,
+				max=255,
+				message='Password confirmation must be between 8 and 255 characters'
+			)
 		]
 	)
 	submit: SubmitField = SubmitField(
