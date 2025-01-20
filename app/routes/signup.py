@@ -17,7 +17,7 @@ def email() -> RenderResponse | RedirectResponse:
 	if form.validate_on_submit():
 		user: User = User(
 			email=str(form.email.data),
-			password=str(form.password.data)
+			raw_password=str(form.password.data)
 		)
 		user.create()
 		flash('Signed up successfully', 'success')
