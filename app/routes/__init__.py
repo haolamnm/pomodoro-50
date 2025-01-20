@@ -1,6 +1,5 @@
 from flask import Flask
 
-from app.routes.main import main
 from app.routes.core import core
 from app.routes.home import home
 from app.routes.about import about
@@ -15,7 +14,6 @@ from app.routes.settings import settings
 
 
 def init_routes(app: Flask) -> None:
-	app.register_blueprint(main)
 	app.register_blueprint(home, url_prefix='/')
 	app.register_blueprint(core, url_prefix='/core')
 	app.register_blueprint(about, url_prefix='/about')
