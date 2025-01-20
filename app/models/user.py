@@ -84,9 +84,10 @@ class User(db.Model):
 	pomodoros = db.relationship('Pomodoro', backref='user', lazy=True)
 
 
-	def __init__(self, email: str, password: str, **kwargs) -> None:
+	def __init__(self, email: str, raw_password: Optional[str], **kwargs) -> None:
 		self.email = email
-		self.set_password(password)
+		if raw_password:
+			self.set_password(raw_password)
 		for key, value in kwargs.items():
 			setattr(self, key, value)
 
@@ -95,10 +96,14 @@ class User(db.Model):
 		db.session.add(self)
 		db.session.commit()
 
+	def update(self) -> None:
+		"""Update the user in the database"""
+		db.session.commit()
+
 	def set_session(self) -> None:
 		"""Set the session for the user"""
 		session['user_id'] = self.id
-		session['email'] = self.email
+		session['user_email'] = self.email
 
 	# def set_token() -> None:
 	# def verify_token(token: str) -> bool:
