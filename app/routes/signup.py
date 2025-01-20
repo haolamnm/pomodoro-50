@@ -23,4 +23,4 @@ def email() -> RenderResponse | RedirectResponse:
 		flash('Signed up successfully', 'success')
 		return redirect(url_for('home.index')), 301
 
-	return render_template('signup/index.html', form=form), 200
+	return render_template('signup.html', form=form), 200
