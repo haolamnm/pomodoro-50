@@ -18,7 +18,7 @@ class UpdateEmailForm(FlaskForm):
 		]
 	)
 	password: PasswordField = PasswordField(
-		label='Password',
+		label='Current Password',
 		validators=[
 			DataRequired(message='Password is required')
 		]
