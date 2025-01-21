@@ -20,6 +20,7 @@ def email() -> RenderResponse | RedirectResponse:
 			raw_password=str(form.password.data)
 		)
 		user.create()
+		user.set_session()
 		flash('Signed up successfully', 'success')
 		return redirect(url_for('home.index')), 301
 
