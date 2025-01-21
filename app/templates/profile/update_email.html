@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block main %}
+<div class="container w-100 w-md-50 bg-dark border rounded shadow p-3 mt-3">
+	<h3 class="text-light">Update Email</h3>
+	<p class="text-secondary text-center mb-3">
+		Done with your old email? Update it here.
+	</p>
+	<!-- CSRF Token -->
+	<form action="{{ url_for('profile.update_email') }}" method="post">
+
+		{{ form.hidden_tag() }}
+
+		<!-- Email -->
+		<div class="mb-1 input-group">
+			<span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+			{{ form.new_email(class="form-control mx-auto w-auto", placeholder="New Email", autofocus=True) }}
+		</div>
+		{% if form.new_email.errors %}
+		<div class="text-danger small">
+			{{ form.new_email.errors[0] }}
+		</div>
+		{% endif %}
+
+		<!-- Password -->
+		<div class="mb-1 mt-3 input-group">
+			<span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+			{{ form.password(class="form-control mx-auto w-auto", placeholder="Password") }}
+		</div>
+		{% if form.password.errors %}
+		<div class="text-danger small">
+			{{ form.password.errors[0] }}
+		</div>
+		{% endif %}
+
+		<div class="text-center mt-3">
+			{{ form.submit() }}
+		</div>
+	</form>
+</div>
+{% endblock %}
