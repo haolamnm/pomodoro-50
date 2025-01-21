@@ -28,13 +28,13 @@ class LoginEmailForm(FlaskForm):
 		render_kw={"class": "btn btn-primary", "style": "width: 100%;"}
 	)
 
-	def validate_email(self, field):
+	def validate_email(self, field) -> None:
 		try:
 			user: User = User.get_by_email(field.data)
 			self.user = user
 		except UserEmailNotFoundError:
 			raise ValidationError('Email is not signed up')
 
-	def validate_password(self, field):
+	def validate_password(self, field) -> None:
 		if hasattr(self, 'user') and not self.user.verify_password(field.data):
 			raise ValidationError('Password is incorrect')
