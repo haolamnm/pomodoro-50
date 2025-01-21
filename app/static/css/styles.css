@@ -12,7 +12,24 @@ body {
 
 main {
 	flex: 1;
-	padding-bottom: 6rem;
+	/* padding-bottom: 6rem; */
+}
+
+#cal-heatmap {
+	min-height: 150px;
+	display: flex;
+	/* Enables flexbox for centering */
+	justify-content: center;
+	/* Horizontally centers the content */
+	align-items: center;
+	/* Vertically centers the content if height is set */
+}
+
+#cal-heatmap svg {
+	margin: 0 auto;
+	/* Ensures SVG is centered inside the container */
+	display: block;
+	/* Removes any extra spacing caused by inline elements */
 }
 
 @media (min-width: 576px) {
@@ -48,5 +65,11 @@ main {
 
 	.w-md-25 {
 		width: 25% !important;
+	}
+}
+
+@media (max-width: 768px) {
+	#current-date-range {
+		font-size: 0.8rem;
 	}
 }
