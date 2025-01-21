@@ -103,6 +103,11 @@ class User(db.Model):
 		"""Update the user in the database"""
 		db.session.commit()
 
+	def delete(self) -> None:
+		"""Delete the user from the database"""
+		db.session.delete(self)
+		db.session.commit()
+
 	def set_session(self) -> None:
 		"""Set the session for the user"""
 		session['user_id'] = self.id
