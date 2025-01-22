@@ -1,7 +1,13 @@
 from typing import Final
 from flask import Blueprint, flash, redirect, url_for, render_template, session
 from flask_mail import Message
-from app.forms.profile import ResetPasswordRequestForm, ResetPasswordTokenForm, UpdateEmailForm, UpdatePasswordForm
+from app.forms.profile import (
+	UpdateEmailForm,
+	UpdatePasswordForm,
+	DeleteProfileForm,
+	ResetPasswordRequestForm,
+	ResetPasswordTokenForm
+)
 from app.models.user import User
 from app.utils.decorators import login_required
 from app.utils.extensions import mail
@@ -15,7 +21,8 @@ profile: Final[Blueprint] = Blueprint('profile', __name__)
 @profile.route('/me', methods=['GET'])
 @login_required
 def me() -> RenderResponse:
-	return render_template('profile/me.html'), 200
+	user: User = User.get_by_id(session['user_id'])
+	return render_template('profile/me.html', user=user), 200
 
 
 @profile.route('/update/email', methods=['GET', 'POST'])
@@ -23,22 +30,48 @@ def me() -> RenderResponse:
 def update_email() -> RenderResponse | RedirectResponse:
 	user: User = User.get_by_id(session['user_id'])
 	form: UpdateEmailForm = UpdateEmailForm(user=user)
+
 	if form.validate_on_submit():
-		form.user.email = str(form.new_email.data)
-		form.user.update()
-		form.user.set_session()
+		user.email = str(form.new_email.data)
+		user.update()
+		user.set_session()
 		flash('Email updated successfully', 'success')
 		return redirect(url_for('profile.me')), 301
 
 	return render_template('profile/update_email.html', form=form), 200
 
 
-@profile.route('/reset/password/request', methods=['GET', 'POST'])
-def reset_password_request() -> RenderResponse | RedirectResponse:
-	if 'user_id' in session:
-		flash('Logged in already', 'info')
+@profile.route('/update/password', methods=['GET', 'POST'])
+@login_required
+def update_password() -> RenderResponse | RedirectResponse:
+	user: User = User.get_by_id(session['user_id'])
+	form: UpdatePasswordForm = UpdatePasswordForm(user=user)
+
+	if form.validate_on_submit():
+		user.set_password(str(form.new_password.data))
+		user.update()
+		flash('Password updated successfully', 'success')
+		return redirect(url_for('profile.me')), 301
+
+	return render_template('profile/update_password.html', form=form), 200
+
+
+@profile.route('/delete', methods=['GET', 'POST'])
+def delete() -> RenderResponse | RedirectResponse:
+	user: User = User.get_by_id(session['user_id'])
+	form: DeleteProfileForm = DeleteProfileForm(user=user)
+
+	if form.validate_on_submit():
+		user.delete()
+		session.clear()
+		flash('Profile deleted successfully', 'success')
 		return redirect(url_for('home.index')), 301
 
+	return render_template('profile/delete.html', form=form), 200
+
+
+@profile.route('/reset/password/request', methods=['GET', 'POST'])
+def reset_password_request() -> RenderResponse | RedirectResponse:
 	form: ResetPasswordRequestForm = ResetPasswordRequestForm()
 	if form.validate_on_submit():
 		msg: Message = form.user.create_reset_password_email()
