@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 	let timer;
 	const timerDisplay = document.getElementById("timer-display");
+	const pomodoroTitle = document.getElementById("pomodoro-title");
 
 	function convertTimeToSeconds(time) {
 		const [minutes, seconds] = time.split(":");
@@ -8,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	let remainingTime = convertTimeToSeconds(timerDisplay.textContent);
-	console.log(remainingTime);
 	let isRunning = false;
 
 	const startButton = document.getElementById("start-button");
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	function startTimer() {
-		if (!isRunning) {
+		if (!isRunning && remainingTime > 0 && pomodoroTitle.value !== '') {
 			isRunning = true;
 			startButton.classList.add("d-none");
 			pauseButton.classList.remove("d-none");
@@ -61,20 +61,17 @@ document.addEventListener("DOMContentLoaded", function () {
 	startButton.addEventListener("click", startTimer);
 	pauseButton.addEventListener("click", pauseTimer);
 
-	const stopModal = new bootstrap.Modal(document.getElementById("stopModal"));
+	const stopModal = new bootstrap.Modal(document.getElementById("stop-modal"));
 	const confirmStop = document.getElementById("confirm-stop");
 
 	pauseButton.addEventListener("click", () => {
-		// console.log(remainingTime);
 		stopModal.show();
 	});
 
 	confirmStop.addEventListener("click", () => {
 		stopModal.hide();
 		pauseTimer();
-		console.log(remainingTime);
 		remainingTime = convertTimeToSeconds(timerDisplay.textContent); // Reset timer
-		console.log(remainingTime);
 		updateDisplay();
 	});
 });
