@@ -1,3 +1,4 @@
+import sys
 from app.utils.types.core import RequestResponseLog
 from app.utils.constants import *
 from app.core.manage_rpd_log import *
@@ -5,12 +6,15 @@ from app.core.manage_rpm_log import *
 from app.utils.extensions import gemini
 
 
-def create_prompt(reason: str) -> str:
+def create_prompt(reason: str, remain: str, total: str, title: str) -> str:
 	"""Create a prompt based on the given reason"""
 	with open(PROMPT_TEMPLATE_FILE, 'r') as file:
 		prompt = file.read()
 
 	prompt = prompt.replace(EMPTY_REASON, reason)
+	prompt = prompt.replace(EMPTY_REMAIN, remain)
+	prompt = prompt.replace(EMPTY_TOTAL, total)
+	prompt = prompt.replace(EMPTY_TITLE, title)
 
 	return prompt
 
@@ -40,7 +44,7 @@ def clean_response(raw_response: str) -> RequestResponseLog:
 	return cleaned_response
 
 
-def generate_response(reason: str) -> RequestResponseLog:
+def generate_response(reason: str, remain: str, total: str, title: str) -> RequestResponseLog:
 	"""Generate a response based on the given reason"""
 	if len(reason) > MAX_REASON_LENGTH:
 		response: RequestResponseLog = {
@@ -68,7 +72,7 @@ def generate_response(reason: str) -> RequestResponseLog:
 		}
 		return response
 
-	prompt: str = create_prompt(reason)
+	prompt: str = create_prompt(reason, remain, total, title)
 	raw_response: str = make_request_to_gemini(prompt)
 	response: RequestResponseLog = clean_response(raw_response)
 
@@ -80,10 +84,11 @@ def save_response(response: RequestResponseLog) -> None:
 		json.dump(response, file, indent=4)
 
 
-def main(reason: str) -> None:
-	response: RequestResponseLog = generate_response(reason)
+def main(reason: str, remain: str, total: str, title: str) -> None:
+	response: RequestResponseLog = generate_response(reason, remain, total, title)
 	save_response(response)
 
 
 if __name__ == '__main__':
-	main('I want to know the weather in New York')
+	# Take 4 arguments: reason, remain, total, title
+	main(*sys.argv[1:])
