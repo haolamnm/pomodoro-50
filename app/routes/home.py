@@ -9,9 +9,12 @@ home: Final[Blueprint] = Blueprint('home', __name__)
 @home.route('/', methods=['GET'])
 @home.route('/home', methods=['GET'])
 def index() -> str:
-	#FIXME: Uncomment this code when the User model is implemented
-	# if 'user_id' in session:
-	# 	user: User = User.get_by_id(session['user_id'])
+	time: str = '00:10'
+	if 'user_id' in session:
+		user: User = User.get_by_id(session['user_id'])
+		time = user.custom_pomodoro_time
 
-	# minutes: int = user.custom_pomodoro_time if user else 50
-	return render_template('home.html', minutes=50)
+	# For testing purposes
+	time = '00:10'
+
+	return render_template('home.html', time=time)
