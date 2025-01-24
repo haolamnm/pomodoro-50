@@ -15,6 +15,14 @@ main {
 	/* padding-bottom: 6rem; */
 }
 
+textarea {
+	resize: none;
+}
+
+#timer-display {
+	font-size: clamp(3rem, 10vw, 6rem);
+}
+
 #cal-heatmap {
 	min-height: 150px;
 	display: flex;
