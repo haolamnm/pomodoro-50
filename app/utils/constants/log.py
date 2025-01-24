@@ -24,6 +24,12 @@ PROMPT_TEMPLATE_FILE: Final[str] = os.path.join(
 	os.path.dirname(os.path.abspath(__file__)))), 'logs', 'prompt.txt'
 )
 
+SYSTEM_INSTRUCTION_FILE: Final[str] = os.path.join(
+	os.path.dirname(
+	os.path.dirname(
+	os.path.dirname(os.path.abspath(__file__)))), 'logs', 'system_instruction.txt'
+)
+
 RESPONSE_LOG_FILE: Final[str] = os.path.join(
     os.path.dirname(
 	os.path.dirname(
@@ -33,3 +39,6 @@ RESPONSE_LOG_FILE: Final[str] = os.path.join(
 MAX_REASON_LENGTH: Final[int] = 500
 
 EMPTY_REASON: Final[str] = '<<EMPTY REASON>>'
+EMPTY_REMAIN: Final[str] = '<<EMPTY REMAINING TIME>>'
+EMPTY_TOTAL: Final[str] = '<<EMPTY TOTAL TIME>>'
+EMPTY_TITLE: Final[str] = '<<EMPTY POMODORO TITLE>>'
