@@ -63,25 +63,13 @@ class User(db.Model):
 		db.Integer,
 		nullable=False,
 		unique=False,
-		server_default='0'
+		server_default='0' # in seconds
 	)
-	custom_pomodoro_time: int = db.Column(
-		db.Integer,
+	custom_pomodoro_time: str = db.Column(
+		db.String(5),
 		nullable=False,
 		unique=False,
-		server_default='50'
-	)
-	custom_short_break_time: int = db.Column(
-		db.Integer,
-		nullable=False,
-		unique=False,
-		server_default='10'
-	)
-	custom_long_break_time: int = db.Column(
-		db.Integer,
-		nullable=False,
-		unique=False,
-		server_default='30'
+		server_default='50:00'
 	)
 
 	pomodoros = db.relationship('Pomodoro', backref='user', lazy=True)
