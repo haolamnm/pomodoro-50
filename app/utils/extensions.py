@@ -8,13 +8,18 @@ import google.generativeai as genai
 from google.generativeai import GenerativeModel
 from authlib.integrations.flask_client import OAuth
 from app.utils.environments import get_env
+from app.utils.constants.log import SYSTEM_INSTRUCTION_FILE
 
 
 genai.configure(
 	api_key=get_env('GOOGLE_API_KEY')
 )
+with open(SYSTEM_INSTRUCTION_FILE, 'r') as file:
+	system_instruction: str = file.read()
+	
 gemini: GenerativeModel = genai.GenerativeModel(
-	model_name='gemini-2.0-flash-exp'
+	model_name='gemini-2.0-flash-exp',
+	system_instruction=system_instruction
 )
 
 
