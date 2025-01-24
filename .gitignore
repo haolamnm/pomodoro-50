@@ -25,3 +25,4 @@ venv/
 app/logs/*
 !app/logs/.gitkeep
 !app/logs/prompt.txt
+!app/logs/system_instruction.txt
