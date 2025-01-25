@@ -91,6 +91,15 @@ class User(db.Model):
 		"""Update the user in the database"""
 		db.session.commit()
 
+	def update_pomodoro_stats(self, duration: int, is_completed: bool) -> None:
+		try:
+			self.total_pomodoros_completed += 1 if is_completed else 0
+			self.total_time_spent += duration
+			self.update()
+		except Exception as e:
+			db.session.rollback()
+			raise RuntimeError('Error in updating user stats') from e
+
 	def delete(self) -> None:
 		"""Delete the user from the database"""
 		db.session.delete(self)
