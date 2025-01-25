@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	const stopModal = new bootstrap.Modal(document.getElementById("stop-modal"));
 
 	const clickSound = new Audio("/static/audio/click.wav");
+	const finishSound = new Audio("/static/audio/finish.wav");
 
 	let remainingTime = convertTimeToSeconds(timerDisplay.textContent);
 	let isRunning = false;
