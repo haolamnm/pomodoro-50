@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 	const currentDate = new Date();
+	const clickSound = new Audio("/static/audio/click.wav");
 	let currentMonth = currentDate.getMonth();
 	let currentYear = currentDate.getFullYear();
 
@@ -86,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 		startDate = new Date(currentYear, currentMonth);
 		paintCalendar(startDate);
+		clickSound.play();
 	});
 
 	nextButton.addEventListener("click", function () {
@@ -97,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 		startDate = new Date(currentYear, currentMonth);
 		paintCalendar(startDate);
+		clickSound.play();
 	});
 
 	// Adjust range on screen resize
