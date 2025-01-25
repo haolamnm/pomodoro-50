@@ -11,4 +11,4 @@ def get_env(key: str) -> str:
 
 
 if __name__ == '__main__':
-	print(get_env('SECRET_KEY'))
+	pass
