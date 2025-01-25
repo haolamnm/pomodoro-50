@@ -3,8 +3,6 @@ from dotenv import load_dotenv
 
 
 def get_env(key: str) -> str:
-	if not os.path.exists('.env'):
-		raise FileNotFoundError('.env file not found')
 	load_dotenv()
 	try:
 		return os.environ[key]
