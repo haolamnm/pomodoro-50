@@ -1,7 +1,12 @@
 // import { showFlashMessage } from "./utils/flash";
 
 function showFlashMessage(message, category) {
-	const flashMessgaeContainer = document.getElementById("flash-message");
+	const flashMessageContainer = document.getElementById("flash-message");
+
+    // Remove all existing child elements from the container
+    while (flashMessageContainer.firstChild) {
+        flashMessageContainer.removeChild(flashMessageContainer.firstChild);
+    }
 
 	const flashMessage = document.createElement("div");
 	flashMessage.classList.add("alert", `alert-${category}`, "alert-dismissible", "mb-0", "text-center", "fade", "show");
@@ -14,10 +19,7 @@ function showFlashMessage(message, category) {
 	closeButton.setAttribute("data-bs-dismiss", "alert");
 	flashMessage.setAttribute("aria-label", "Close");
 
-	if (flashMessgaeContainer.firstChild) {
-		flashMessgaeContainer.removeChild(flashMessgaeContainer.firstChild);
-	}
-	flashMessgaeContainer.appendChild(flashMessage);
+	flashMessageContainer.appendChild(flashMessage);
 	flashMessage.appendChild(closeButton);
 }
 
@@ -27,9 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
 	const pomodoroTitle = document.getElementById("pomodoro-title");
 	const startButton = document.getElementById("start-button");
 	const pauseButton = document.getElementById("pause-button");
-	const closeButton = document.getElementById("close-button");
 	const pomodoroTime = document.getElementById("pomodoro-time");
 	const stopModal = new bootstrap.Modal(document.getElementById("stop-modal"));
+
+	const clickSound = new Audio("/static/audio/click.wav");
 
 	let remainingTime = convertTimeToSeconds(timerDisplay.textContent);
 	let isRunning = false;
@@ -100,14 +103,12 @@ document.addEventListener("DOMContentLoaded", function () {
 	startButton.addEventListener("click", () => {
 		stopModal.hide();
 		startTimer();
+		clickSound.play();
 	});
 	pauseButton.addEventListener("click", () => {
 		stopModal.show();
 		pauseTimer();
-	});
-	closeButton.addEventListener("click", () => {
-		stopModal.hide();
-		startTimer();
+		clickSound.play();
 	});
 
 	async function handleSendReason() {
@@ -134,6 +135,14 @@ document.addEventListener("DOMContentLoaded", function () {
 				</div>
 			`;
 			stopReasonTextarea.setAttribute("disabled", "true");
+
+			// Get the buttons to disable them
+			const closeButton = document.getElementById("close-button");
+			const sendReasonButton = document.getElementById("send-reason-button");
+
+			// Disable the buttons
+			closeButton.setAttribute("disabled", "true");
+			sendReasonButton.setAttribute("disabled", "true");
 
 			const response = await fetch("/core/check-reason", {
 				method: "POST",
@@ -180,20 +189,28 @@ document.addEventListener("DOMContentLoaded", function () {
 				let countdown = 30;
 				const continueTimerButton = document.getElementById("continue-timer-button");
 				const countdownSpan = document.getElementById("countdown");
+				const closeButton = document.getElementById("close-button");
 				const countdownInterval = setInterval(() => {
 					countdown -= 1;
 					countdownSpan.textContent = countdown;
 					if (countdown === 0) {
 						clearInterval(countdownInterval);
-						startTimer();
 						stopModal.hide();
+						startTimer();
 					}
 				}, 1000);
 
 				continueTimerButton.addEventListener("click", () => {
 					clearInterval(countdownInterval);
-					startTimer();
 					stopModal.hide();
+					startTimer();
+					clickSound.play();
+				});
+
+				closeButton.addEventListener("click", () => {
+					stopModal.hide();
+					startTimer();
+					clickSound.play();
 				});
 
 			} else {
@@ -214,12 +231,20 @@ document.addEventListener("DOMContentLoaded", function () {
 				`;
 
 				const stopCompletelyButton = document.getElementById("stop-completely-button");
+				const closeButton = document.getElementById("close-button");
 
 				stopCompletelyButton.addEventListener("click", () => {
 					pomodoroTitle.removeAttribute("disabled");
 					stopModal.hide();
 					pauseTimer();
 					resetDisplay();
+					clickSound.play();
+				});
+
+				closeButton.addEventListener("click", () => {
+					stopModal.hide();
+					pauseTimer();
+					clickSound.play();
 				});
 			}
 		} catch (error) {
@@ -236,8 +261,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.querySelector(".modal-footer").addEventListener("click", (event) => {
 		if (event.target.id === "send-reason-button") {
 			handleSendReason();
+			clickSound.play();
 		} else if (event.target.id === "close-button") {
 			stopModal.hide();
+			startTimer();
+			clickSound.play();
 		}
 	});
 
@@ -261,5 +289,12 @@ document.addEventListener("DOMContentLoaded", function () {
 				<i class="fas fa-paper-plane"></i>
 			</button>
 		`;
+
+		const closeButton = document.getElementById("close-button");
+		closeButton.addEventListener("click", () => {
+			stopModal.hide();
+			startTimer();
+			clickSound.play();
+		});
 	});
 });
