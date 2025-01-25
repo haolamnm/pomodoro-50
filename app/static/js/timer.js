@@ -59,6 +59,37 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateDisplay();
 	}
 
+	async function createPomodoro() {
+		try {
+			const response = await fetch("/core/add/pomodoro", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					title: pomodoroTitle.value.toLowerCase().trim(),
+					duration: convertTimeToSeconds(pomodoroTime.value),
+					start_at: new Date(Date.now() - convertTimeToSeconds(pomodoroTime.value) * 1000).toISOString(),
+					end_at: new Date().toISOString(),
+					is_completed: true,
+					reason: "completed",
+				}),
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				console.log("Error creating Pomodoro:", error);
+				return;
+			}
+
+			const data = await response.json();
+			console.log("Pomodoro created:", data);
+
+		} catch (error) {
+			console.error("Error:", error);
+		}
+	};
+
 	function startTimer() {
 		// If the user has not entered a title for the Pomodoro
 		if (pomodoroTitle.value === '') {
@@ -81,11 +112,13 @@ document.addEventListener("DOMContentLoaded", function () {
 				} else {
 					clearInterval(timer);
 					isRunning = false;
-					showFlashMessage("Pomodoro Completed", "success");
 					resetDisplay();
 					pomodoroTitle.removeAttribute("disabled");
 					startButton.classList.remove("d-none");
 					pauseButton.classList.add("d-none");
+					createPomodoro();
+					showFlashMessage("Pomodoro completed", "success");
+					finishSound.play();
 				}
 			}, 1000);
 		}
@@ -145,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			closeButton.setAttribute("disabled", "true");
 			sendReasonButton.setAttribute("disabled", "true");
 
-			const response = await fetch("/core/check-reason", {
+			const response = await fetch("/core/check/reason", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -157,10 +190,10 @@ document.addEventListener("DOMContentLoaded", function () {
 					title: pomodoroTitle.value
 				}),
 			});
-			console.log(response);
+			// console.log(response);
 
 			const aiResponse = await response.json();
-			console.log(aiResponse);
+			// console.log(aiResponse);
 
 			const adviceDisplay = document.getElementById("advice-display");
 			const modalFooter = document.querySelector(".modal-footer");
