@@ -77,6 +77,6 @@ RESPONSE GUIDELINES
 
 CONSIDERATIONS:
 - If any of the input fields are empty, just don't use them in the response.
-- Use the remaining time and total time to determine urgency and encourage focus.
-- Acknowledge the session title to personalize advice and enhance engagement.
-- For valid interruptions, suggest using the remaining time efficiently when resuming work.
+- You can use the session title to personalize the advice but ensure it's relevant
+- You can use the remaining time to suggest using it efficiently when resuming work.
+- You can use the total time to provide context on the session duration.
