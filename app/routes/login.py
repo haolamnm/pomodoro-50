@@ -24,6 +24,7 @@ def email() -> RenderResponse | RedirectResponse:
 	if (login_email_form.validate_on_submit()
 	 	and login_email_form.form_name.data == 'login_email_form'):
 		login_email_form.user.set_session()
+		login_email_form.user.set_last_login_at()
 		flash('Logged in successfully', 'success')
 		return redirect(url_for('home.index')), 301
 
@@ -80,6 +81,7 @@ def google_authorize() -> RedirectResponse:
 			user.update()
 
 		user.set_session()
+		user.set_last_login_at()
 		flash('Logged in with Google successfully', 'success')
 		return redirect(url_for('home.index')), 302
 
@@ -92,6 +94,7 @@ def google_authorize() -> RedirectResponse:
 		)
 		new_user.create()
 		new_user.set_session()
+		new_user.set_last_login_at()
 		flash('Signed up with Google successfully', 'success')
 		return redirect(url_for('home.index')), 302
 
@@ -136,6 +139,7 @@ def github_authorize() -> RedirectResponse:
 			user.update()
 
 		user.set_session()
+		user.set_last_login_at()
 		flash('Logged in with GitHub successfully', 'success')
 		return redirect(url_for('home.index')), 302
 
@@ -148,6 +152,7 @@ def github_authorize() -> RedirectResponse:
 		)
 		new_user.create()
 		new_user.set_session()
+		new_user.set_last_login_at()
 		flash('Signed up with GitHub successfully', 'success')
 		return redirect(url_for('home.index')), 302
 

@@ -101,6 +101,11 @@ class User(db.Model):
 		session['user_id'] = self.id
 		session['user_email'] = self.email
 
+	def set_last_login_at(self) -> None:
+		"""Set the last login time"""
+		self.last_login_at = datetime.now()
+		self.update()
+
 	def set_token(self) -> str:
 		serializer: Serializer = Serializer(get_env('SECRET_KEY'))
 		data: dict[str, int] = {'user_id': self.id}
