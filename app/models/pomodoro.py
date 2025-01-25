@@ -35,12 +35,32 @@ class Pomodoro(db.Model):
 		unique=False,
 		server_default=db.func.now()
 	)
-	end_at: Optional[datetime] = db.Column(
+	end_at: datetime = db.Column(
 		db.DateTime,
 		nullable=True,
 		unique=False
-	) # If the Pomodoro is completed, this field will be updated
+	)
+	is_completed: bool = db.Column(
+		db.Boolean,
+		nullable=False,
+		unique=False,
+		server_default='0'
+	)
+	reason: str = db.Column(
+		db.String(255),
+		nullable=True,
+		unique=False
+	)
 
-	@property
-	def is_completed(self) -> bool:
-		return self.end_at is not None
+	def __init__(self, user_id: int, title: str, duration: int, start_at: datetime, end_at: datetime, is_completed: bool, reason: str) -> None:
+		self.user_id = user_id
+		self.title = title
+		self.duration = duration
+		self.start_at = start_at
+		self.end_at = end_at
+		self.is_completed = is_completed
+		self.reason = reason
+
+	def create(self) -> None:
+		db.session.add(self)
+		db.session.commit()
