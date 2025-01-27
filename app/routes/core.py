@@ -5,14 +5,15 @@ from typing import Final
 from flask import Blueprint, jsonify, request, json, session
 from datetime import datetime
 from app.utils.constants.log import RESPONSE_LOG_FILE
-from app.models import Pomodoro, User
+from app.models import Pomodoro, User, Reason
+from app.utils.types import GenericResponse
 
 
 core: Final[Blueprint] = Blueprint('core', __name__)
 
 
 @core.route('/check/reason', methods=['POST'])
-def check_reason():
+def check_reason() -> GenericResponse:
 	if request.json is None:
 		return jsonify({
 			'status': 'error',
@@ -63,7 +64,7 @@ def check_reason():
 
 
 @core.route('/add/pomodoro', methods=['POST'])
-def update_pomodoro():
+def create_pomodoro() -> GenericResponse:
 	if request.json is None:
 		return jsonify({
 			'status': 'error',
@@ -110,6 +111,53 @@ def update_pomodoro():
 			'status': 'success',
 			'reason': 'Pomodoro session added successfully',
 			'advice': 'You can view your statistics in the dashboard'
+		}), 200
+
+	except Exception as e:
+		return jsonify({
+			'status': 'error',
+			'reason': str(e),
+			'advice': 'An unexpected error occurred'
+		}), 500
+
+
+@core.route('/add/invalid-reason', methods=['POST'])
+def add_reason() -> GenericResponse:
+	if request.json is None:
+		return jsonify({
+			'status': 'error',
+			'reason': 'No JSON data provided',
+			'advice': 'Please provide a valid JSON object'
+		}), 400
+
+	try:
+		user_id: int = session['user_id']
+		if not user_id:
+			return jsonify({
+				'status': 'error',
+				'reason': 'User not found',
+				'advice': 'Please log in to add a reason'
+			}), 401
+
+		ai_reason: str = request.json['reason']
+
+		if not ai_reason:
+			return jsonify({
+				'status': 'error',
+				'reason': 'Invalid reason',
+				'advice': 'Please provide a valid reason'
+			}), 400
+
+		reason: Reason = Reason(
+			user_id=user_id,
+			reason=ai_reason
+		)
+		reason.create()
+
+		return jsonify({
+			'status': 'success',
+			'reason': 'Reason added successfully',
+			'advice': 'You can view your reasons in the dashboard'
 		}), 200
 
 	except Exception as e:

@@ -120,6 +120,31 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
+	async function storeInvalidReason(reason) {
+		try {
+			const response = await fetch("/core/add/invalid-reason", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					reason: reason.toLowerCase().trim(),
+				}),
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				console.error("Error storing invalid reason:", error);
+				return;
+			}
+
+			const data = await response.json();
+			console.log("Invalid reason stored:", data);
+		} catch (error) {
+			console.error("Unexpected error:", error);
+		}
+	}
+
 	function startTimer() {
 		// If the user has not entered a title for the Pomodoro
 		if (pomodoroTitle.value === '') {
@@ -259,6 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					countdownSpan.textContent = countdown;
 					if (countdown === 0) {
 						clearInterval(countdownInterval);
+						storeInvalidReason(aiResponse.reason);
 						stopModal.hide();
 						startTimer();
 					}
@@ -266,12 +292,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 				continueTimerButton.addEventListener("click", () => {
 					clearInterval(countdownInterval);
+					storeInvalidReason(aiResponse.reason);
 					stopModal.hide();
 					startTimer();
 					clickSound.play();
 				});
 
 				closeButton.addEventListener("click", () => {
+					storeInvalidReason(aiResponse.reason);
 					stopModal.hide();
 					startTimer();
 					clickSound.play();
