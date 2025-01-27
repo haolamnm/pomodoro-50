@@ -7,7 +7,7 @@ def login_required(func):
 	def decorated_function(*args, **kwargs):
 		if session.get("user_id") is None:
 			flash('Please login to access this page', 'warning')
-			return redirect(url_for('login.index'))
+			return redirect(url_for('login.email'))
 		return func(*args, **kwargs)
 
 	return decorated_function
