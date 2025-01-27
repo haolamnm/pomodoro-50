@@ -14,5 +14,5 @@ def index() -> RenderResponse:
 		user: User = User.get_by_id(session['user_id'])
 		time: str = user.custom_pomodoro_time
 		return render_template('timer.html', time=time), 200
-
-	return render_template('home.html'), 200
+	else:
+		return render_template('home.html'), 200
