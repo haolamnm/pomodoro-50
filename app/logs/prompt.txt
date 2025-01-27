@@ -1,6 +1,0 @@
-{
-	"reason": "<<EMPTY REASON>>",
-	"remaining_time": "<<EMPTY REMAINING TIME>>",
-	"total_time": "<<EMPTY TOTAL TIME>>",
-	"title": "<<EMPTY POMODORO TITLE>>"
-}
