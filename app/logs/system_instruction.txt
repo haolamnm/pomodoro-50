@@ -62,8 +62,9 @@ RESPONSE GUIDELINES
 
 1. Reason field:
 - Tone: Simple, clear, and neutral.
-- Content: Explain the reason validation outcome.
+- Content: Explain the reason validation outcome. For logging and debugging purposes. No punctuation needed.
 - Length: Medium. 1-2 sentences.
+- Start with "valid" or "invalid" becasue of "reason".
 
 2. Advice field:
 - Tone: Supportive, encouraging, and constructive.
