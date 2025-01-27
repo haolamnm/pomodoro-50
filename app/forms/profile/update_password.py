@@ -32,7 +32,10 @@ class UpdatePasswordForm(FlaskForm):
 		self.user = user
 
 	def validate_password(self, field) -> None:
-		if hasattr(self, 'user') and not self.user.verify_password(field.data):
+		if hasattr(self, 'user') and self.user.password is None:
+			raise ValidationError('Since you signed up with Google or GitHub account, you need to go to "forgot password" to set a password')
+
+		if not self.user.verify_password(field.data):
 			raise ValidationError('Password is incorrect')
 
 		if self.new_password.data == field.data:

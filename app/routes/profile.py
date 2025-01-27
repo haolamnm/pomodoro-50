@@ -56,8 +56,8 @@ def update_password() -> RenderResponse | RedirectResponse:
 	form: UpdatePasswordForm = UpdatePasswordForm(user=user)
 
 	if form.validate_on_submit():
-		user.set_password(str(form.new_password.data))
-		user.update()
+		form.user.set_password(str(form.new_password.data))
+		form.user.update()
 		flash('Password updated successfully', 'success')
 		return redirect(url_for('profile.me')), 301
 
