@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Settings
+{% endblock %}
+
+{% block main %}
+<div class="container w-100 w-md-50 bg-dark border rounded shadow p-3">
+	<h3 class="text-light">Settings</h3>
+	<p class="text-secondary text-center mb-3">Customize your Pomodoro 50 experience</p>
+
+	<!-- Settings form -->
+	<form action="{{ url_for('settings.me') }}" method="post">
+		{{ form.hidden_tag() }}
+
+		<!-- Duration -->
+		<div class="mb-1 input-group">
+			<span class="input-group-text"><i class="fa-solid fa-clock"></i></span>
+			{{ form.duration(class="form-control mx-auto w-auto") }}
+		</div>
+		{% if form.duration.errors %}
+		<div class="text-danger small">
+			{{ form.duration.errors[0] }}
+		</div>
+		{% endif %}
+
+		<!-- Submit -->
+		<div class="text-center mt-3">
+			{{ form.submit() }}
+		</div>
+
+		<p class="text-center text-light mt-3">
+			Want to change your email or password?
+			<a href="{{ url_for('profile.me') }}">
+				Click here!
+			</a>
+		</p>
+
+	</form>
+</div>
+{% endblock %}
