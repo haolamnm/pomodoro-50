@@ -100,6 +100,10 @@ class User(db.Model):
 			db.session.rollback()
 			raise RuntimeError('Error in updating user stats') from e
 
+	def update_custom_pomodoro_time(self, custom_pomodoro_time: str) -> None:
+		self.custom_pomodoro_time = custom_pomodoro_time
+		self.update()
+
 	def delete(self) -> None:
 		"""Delete the user from the database"""
 		db.session.delete(self)
