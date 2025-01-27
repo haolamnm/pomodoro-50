@@ -3,7 +3,7 @@ from flask import Response
 from werkzeug.wrappers import Response as Redirect
 
 
-type StatusCode = Literal[200, 301, 302, 404, 500]
+type StatusCode = Literal[200, 301, 302, 400, 401, 404, 500]
 
 # general response with status code
 type GenericResponse = tuple[Response, StatusCode]
