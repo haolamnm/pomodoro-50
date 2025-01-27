@@ -64,3 +64,23 @@ class Pomodoro(db.Model):
 	def create(self) -> None:
 		db.session.add(self)
 		db.session.commit()
+
+	@classmethod
+	def get_by_user_id(cls, user_id: int) -> list['Pomodoro']:
+		try:
+			return cls.query.filter_by(user_id=user_id).all()
+		except Exception as e:
+			return []
+
+	@classmethod
+	def get_by_time(cls, user_id: int, start_at: datetime, end_at: datetime) -> list['Pomodoro']:
+		try:
+			return cls.query.filter(
+				db.and_(
+					cls.user_id == user_id,
+					cls.start_at >= start_at,
+					cls.start_at <= end_at
+				)
+			).all()
+		except Exception:
+			return []
