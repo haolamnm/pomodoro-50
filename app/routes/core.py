@@ -28,6 +28,7 @@ def check_reason() -> GenericResponse:
 
 		result = subprocess.run(
 			[sys.executable, '-m', 'app.core.request', reason, remain, total, title],
+			env={**os.environ, 'PYTHONPATH': os.getcwd()},
 			capture_output=True,
 			text=True,
 			check=True
@@ -51,7 +52,7 @@ def check_reason() -> GenericResponse:
 		return jsonify({
 			'status': 'error',
 			'reason': str(e),
-			'advice': 'Error in running the request script'
+			'advice': 'Error in running the request script' + str(e)
 		}), 500
 
 	except Exception as e:

@@ -91,4 +91,4 @@ def main(reason: str, remain: str, total: str, title: str) -> None:
 
 if __name__ == '__main__':
 	# Take 4 arguments: reason, remain, total, title
-	main(*sys.argv[1:])
+	main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
