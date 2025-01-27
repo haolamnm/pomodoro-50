@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}
+History
+{% endblock %}
+
+{% block main %}
+<div class="container w-100 w-md-75 bg-dark border rounded shadow p-3">
+	<!-- Search Input -->
+	<div class="mb-3 input-group">
+		<span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+		<input type="text" id="search-input" class="form-control" placeholder="Search by title, reason, or status...">
+	</div>
+
+	<!-- Pomodoro History Table -->
+	<div class="table-responsive">
+		<table class="table table-dark table-hover">
+			<thead class="thead-dark">
+				<tr>
+					<th>Title</th>
+					<th>Minutes</th>
+					<th>End At</th>
+					<th>Status</th>
+					<th>Reason</th>
+				</tr>
+			</thead>
+			<tbody id="pomodoro-table-body">
+				{% for pomodoro in pomodoros %}
+				<tr>
+					<td class="text-start">{{ pomodoro.title }}</td>
+					<td>{{ pomodoro.duration // 60 }}</td>
+					<td>{{ pomodoro.end_at.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+					<td>
+						{% if pomodoro.is_completed %}
+						<span class="badge bg-success"><i class="fa-solid fa-check"></i></span>
+						<span class="d-none">completed</span>
+						{% else %}
+						<span class="badge bg-danger"><i class="fa-solid fa-xmark"></i></span>
+						<span class="d-none">incomplete</span>
+						{% endif %}
+					</td>
+					<td class="text-start">{{ pomodoro.reason }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- JavaScript for Search Functionality -->
+<script src="../static/js/history.js"></script>
+{% endblock %}
