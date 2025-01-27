@@ -73,7 +73,7 @@ class User(db.Model):
 	)
 
 	pomodoros = db.relationship('Pomodoro', backref='user', lazy=True)
-
+	reasons = db.relationship('Reason', backref='user', lazy=True)
 
 	def __init__(self, email: str, raw_password: Optional[str], **kwargs) -> None:
 		self.email = email
