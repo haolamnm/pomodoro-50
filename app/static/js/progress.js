@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
 	const currentDate = new Date();
 	const clickSound = new Audio("/static/audio/click.wav");
+	const calHeatmapDataStr = document.getElementById("cal-heatmap-data").value;
+	const calHeatmapDataJSON = calHeatmapDataStr.replace(/'/g, '"');
+	const calHeatmapDataObj = JSON.parse(calHeatmapDataJSON);
 	let currentMonth = currentDate.getMonth();
 	let currentYear = currentDate.getFullYear();
 
@@ -47,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			animationDuration: 250,
 			theme: 'dark',
 			data: {
-				source: '/static/data/progress.json',
+				source: calHeatmapDataObj,
 				type: 'json',
 				x: 'date',
 				y: (d) => d.value,

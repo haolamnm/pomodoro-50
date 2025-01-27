@@ -8,10 +8,11 @@ from app.forms.profile import (
 	ResetPasswordRequestForm,
 	ResetPasswordTokenForm
 )
-from app.models.user import User
+from app.models import User, Pomodoro
+from app.utils.types import DurationLog, RenderResponse, RedirectResponse
+from app.utils.helpers import get_all_time_duration
 from app.utils.decorators import login_required
 from app.utils.extensions import mail
-from app.utils.types.route import RenderResponse, RedirectResponse
 
 
 profile: Final[Blueprint] = Blueprint('profile', __name__)
@@ -21,8 +22,15 @@ profile: Final[Blueprint] = Blueprint('profile', __name__)
 @profile.route('/me', methods=['GET'])
 @login_required
 def me() -> RenderResponse:
-	user: User = User.get_by_id(session['user_id'])
-	return render_template('profile/me.html', user=user), 200
+	user_id: int = session['user_id']
+	user: User = User.get_by_id(user_id)
+	pomodoros: list[Pomodoro] = Pomodoro.get_by_user_id(user_id)
+	all_time_duration_logs: list[DurationLog] = get_all_time_duration(pomodoros)
+	return render_template(
+		'profile/me.html',
+		user=user,
+		all_time_duration_logs=all_time_duration_logs
+	), 200
 
 
 @profile.route('/update/email', methods=['GET', 'POST'])
