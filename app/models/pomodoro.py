@@ -1,4 +1,4 @@
-from typing import Final, Optional
+from typing import Final, Literal
 from datetime import datetime
 from app.utils.extensions import db
 
@@ -66,9 +66,14 @@ class Pomodoro(db.Model):
 		db.session.commit()
 
 	@classmethod
-	def get_by_user_id(cls, user_id: int) -> list['Pomodoro']:
+	def get_by_user_id(cls, user_id: int, type: Literal['asc', 'desc'] = 'asc') -> list['Pomodoro']:
 		try:
-			return cls.query.filter_by(user_id=user_id).all()
+			if type == 'asc':
+				return cls.query.filter_by(user_id=user_id).all()
+			elif type == 'desc':
+				return cls.query.filter_by(user_id=user_id).order_by(db.desc(cls.start_at)).all()
+			else:
+				raise Exception('Invalid type')
 		except Exception as e:
 			return []
 
