@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					start_at: new Date(Date.now() - convertTimeToSeconds(pomodoroTime.value) * 1000).toISOString(),
 					end_at: new Date().toISOString(),
 					is_completed: true,
-					reason: "completed",
+					reason: "valid because pomodoro was completed",
 				}),
 			});
 
