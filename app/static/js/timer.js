@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateDisplay();
 	}
 
-	async function createPomodoro() {
+	async function createCompletedPomodoro() {
 		try {
 			const response = await fetch("/core/add/pomodoro", {
 				method: "POST",
@@ -78,17 +78,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			if (!response.ok) {
 				const error = await response.json();
-				console.log("Error creating Pomodoro:", error);
+				console.error("Error creating Pomodoro:", error);
 				return;
 			}
 
 			const data = await response.json();
-			console.log("Pomodoro created:", data);
+			// console.log("Pomodoro created:", data);
 
 		} catch (error) {
-			console.error("Error:", error);
+			console.error("Unexpected error:", error);
 		}
 	};
+
+	async function createStoppedPomodoro(reason, remainingTime) {
+		try {
+			const response = await fetch("/core/add/pomodoro", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					title: pomodoroTitle.value.toLowerCase().trim(),
+					duration: convertTimeToSeconds(pomodoroTime.value) - remainingTime,
+					start_at: new Date(Date.now() - convertTimeToSeconds(pomodoroTime.value) * 1000 + remainingTime * 1000).toISOString(),
+					end_at: new Date().toISOString(),
+					is_completed: false,
+					reason: reason.toLowerCase().trim(),
+				}),
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				console.error("Error creating Pomodoro:", error);
+				return;
+			}
+
+			const data = await response.json();
+			// console.log("Pomodoro created:", data);
+		} catch (error) {
+			console.error("Unexpected error:", error);
+		}
+	}
 
 	function startTimer() {
 		// If the user has not entered a title for the Pomodoro
@@ -112,12 +142,12 @@ document.addEventListener("DOMContentLoaded", function () {
 				} else {
 					clearInterval(timer);
 					isRunning = false;
-					resetDisplay();
 					pomodoroTitle.removeAttribute("disabled");
 					startButton.classList.remove("d-none");
 					pauseButton.classList.add("d-none");
-					createPomodoro();
+					createCompletedPomodoro();
 					showFlashMessage("Pomodoro completed", "success");
+					resetDisplay();
 					finishSound.play();
 				}
 			}, 1000);
@@ -271,6 +301,9 @@ document.addEventListener("DOMContentLoaded", function () {
 					pomodoroTitle.removeAttribute("disabled");
 					stopModal.hide();
 					pauseTimer();
+					// console.log(pomodoroTime.value, remainingTime, aiResponse.reason);
+					createStoppedPomodoro(aiResponse.reason, remainingTime);
+					showFlashMessage("Pomodoro stopped", "info");
 					resetDisplay();
 					clickSound.play();
 				});
@@ -278,6 +311,9 @@ document.addEventListener("DOMContentLoaded", function () {
 				closeButton.addEventListener("click", () => {
 					stopModal.hide();
 					pauseTimer();
+					createStoppedPomodoro(aiResponse.reason, remainingTime);
+					showFlashMessage("Pomodoro stopped", "info");
+					resetDisplay();
 					clickSound.play();
 				});
 			}
