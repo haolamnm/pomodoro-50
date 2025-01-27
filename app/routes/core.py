@@ -1,12 +1,10 @@
-import os
-import sys
-import subprocess
 from typing import Final
 from flask import Blueprint, jsonify, request, json, session
 from datetime import datetime
 from app.utils.constants.log import RESPONSE_LOG_FILE
 from app.models import Pomodoro, User, Reason
-from app.utils.types import GenericResponse
+from app.utils.types import GenericResponse, RequestResponseLog
+from app.core.request import generate_response
 
 
 core: Final[Blueprint] = Blueprint('core', __name__)
@@ -26,37 +24,12 @@ def check_reason() -> GenericResponse:
 		total: str = request.json['total'] # Total time
 		title: str = request.json['title'] # Title of the session
 
-		result = subprocess.run(
-			[sys.executable, '-m', 'app.core.request', reason, remain, total, title],
-			env={**os.environ, 'PYTHONPATH': os.getcwd()},
-			capture_output=True,
-			text=True,
-			check=True
-		)
-		# For debugging purposes
-		# print(f"Running command: python -m app.core.request '{reason}'")
-		# print(f"STDOUT: {result.stdout}")
-		# print(f"STDERR: {result.stderr}")
+		# print(reason, remain, total, title)
+		response: RequestResponseLog = generate_response(reason, remain, total, title)
 
-		with open(RESPONSE_LOG_FILE, 'r') as file:
-			ai_response = json.load(file)
-
-		# TODO: Save the user's reason in the database
-
-		return jsonify(ai_response), 200
-
-	except subprocess.CalledProcessError as e:
-		# print(f"Subprocess error: {e}")
-		# print(f"STDOUT: {result.stdout}")
-		# print(f"STDERR: {result.stderr}")
-		return jsonify({
-			'status': 'error',
-			'reason': str(e),
-			'advice': 'Error in running the request script' + str(e)
-		}), 500
+		return jsonify(response), 200
 
 	except Exception as e:
-		# print(f"General error: {e}")
 		return jsonify({
 			'status': 'error',
 			'reason': str(e),
