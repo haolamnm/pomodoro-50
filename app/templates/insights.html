@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Insights
+{% endblock %}
+
+{% block main %}
+<div class="container w-100 w-md-50 bg-dark border rounded shadow p-3">
+	<h3 class="text-center mb-3">Insights</h3>
+	<div>
+		<canvas id="durationsChart" class="mb-3"></canvas>
+		<input type="hidden" id="weekly-durations" value="{{ weekly_durations }}">
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../static/js/insights.js"></script>
+{% endblock %}
