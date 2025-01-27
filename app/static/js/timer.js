@@ -37,7 +37,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	let remainingTime = convertTimeToSeconds(timerDisplay.textContent);
 	let isRunning = false;
+	let isModalVisible = false;
+	let isReasoning = false;
 	let timer;
+
+	window.addEventListener("beforeunload", (event) => {
+		if (isRunning || isModalVisible) {
+			event.preventDefault();
+			showFlashMessage("Your progress will be lost", "warning");
+		}
+	});
 
 	function convertTimeToSeconds(time) {
 		const [minutes, seconds] = time.split(":");
@@ -167,13 +176,13 @@ document.addEventListener("DOMContentLoaded", function () {
 				} else {
 					clearInterval(timer);
 					isRunning = false;
+					finishSound.play();
 					pomodoroTitle.removeAttribute("disabled");
 					startButton.classList.remove("d-none");
 					pauseButton.classList.add("d-none");
 					createCompletedPomodoro();
 					showFlashMessage("Pomodoro completed", "success");
 					resetDisplay();
-					finishSound.play();
 				}
 			}, 1000);
 		}
@@ -190,15 +199,48 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	startButton.addEventListener("click", () => {
+		clickSound.play();
 		stopModal.hide();
 		startTimer();
-		clickSound.play();
 	});
 	pauseButton.addEventListener("click", () => {
+		clickSound.play();
 		stopModal.show();
 		pauseTimer();
-		clickSound.play();
 	});
+	pomodoroTitle.addEventListener("keydown", (event) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			startButton.click();
+		}
+	});
+	window.addEventListener("keydown", (event) => {
+		if (event.key === " ") {
+			const focusedElement = document.activeElement;
+			const isInputFocused =
+				(focusedElement.tagName === "INPUT" && !focusedElement.disabled) ||
+				(focusedElement.tagName === "TEXTAREA" && !focusedElement.disabled) ||
+				focusedElement.isContentEditable;
+
+			if (!isInputFocused && !isReasoning) {
+				if (event.key === " ") {
+					event.preventDefault();
+					if (isRunning) {
+						pauseButton.click();
+					} else {
+						startButton.click();
+					}
+				}
+			}
+		}
+		if (event.key === "Escape") {
+			event.preventDefault();
+			if (isModalVisible) {
+				startButton.click();
+			}
+		}
+	});
+
 
 	async function handleSendReason() {
 		const stopReasonTextarea = document.getElementById("stop-reason");
@@ -223,6 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					<span class="visually-hidden">Loading...</span>
 				</div>
 			`;
+			isReasoning = true;
 			stopReasonTextarea.setAttribute("disabled", "true");
 
 			// Get the buttons to disable them
@@ -255,6 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			// Clear the processing spinner
 			infoDisplay.innerHTML = '';
+			isReasoning = false;
 
 			adviceDisplay.textContent = aiResponse.advice;
 
@@ -292,17 +336,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 				continueTimerButton.addEventListener("click", () => {
 					clearInterval(countdownInterval);
+					clickSound.play();
 					storeInvalidReason(aiResponse.reason);
 					stopModal.hide();
 					startTimer();
-					clickSound.play();
 				});
 
 				closeButton.addEventListener("click", () => {
+					clickSound.play();
 					storeInvalidReason(aiResponse.reason);
 					stopModal.hide();
 					startTimer();
-					clickSound.play();
 				});
 
 			} else {
@@ -328,21 +372,21 @@ document.addEventListener("DOMContentLoaded", function () {
 				stopCompletelyButton.addEventListener("click", () => {
 					pomodoroTitle.removeAttribute("disabled");
 					stopModal.hide();
+					clickSound.play();
 					pauseTimer();
 					// console.log(pomodoroTime.value, remainingTime, aiResponse.reason);
 					createStoppedPomodoro(aiResponse.reason, remainingTime);
 					showFlashMessage("Pomodoro stopped", "info");
 					resetDisplay();
-					clickSound.play();
 				});
 
 				closeButton.addEventListener("click", () => {
 					stopModal.hide();
+					clickSound.play();
 					pauseTimer();
 					createStoppedPomodoro(aiResponse.reason, remainingTime);
 					showFlashMessage("Pomodoro stopped", "info");
 					resetDisplay();
-					clickSound.play();
 				});
 			}
 		} catch (error) {
@@ -358,16 +402,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	document.querySelector(".modal-footer").addEventListener("click", (event) => {
 		if (event.target.id === "send-reason-button") {
-			handleSendReason();
 			clickSound.play();
+			handleSendReason();
 		} else if (event.target.id === "close-button") {
 			stopModal.hide();
-			startTimer();
 			clickSound.play();
+			startTimer();
 		}
 	});
 
 	document.getElementById("stop-modal").addEventListener("hidden.bs.modal", () => {
+		isModalVisible = false;
+
 		const stopReasonTextarea = document.getElementById("stop-reason");
 		stopReasonTextarea.value = '';
 		stopReasonTextarea.removeAttribute("disabled");
@@ -391,8 +437,21 @@ document.addEventListener("DOMContentLoaded", function () {
 		const closeButton = document.getElementById("close-button");
 		closeButton.addEventListener("click", () => {
 			stopModal.hide();
-			startTimer();
 			clickSound.play();
+			startTimer();
+		});
+	});
+	document.getElementById("stop-modal").addEventListener("shown.bs.modal", () => {
+		isModalVisible = true;
+
+		const stopReasonTextarea = document.getElementById("stop-reason");
+		const sendReasonButton = document.getElementById("send-reason-button");
+		stopReasonTextarea.focus();
+		stopReasonTextarea.addEventListener("keydown", (event) => {
+			if (event.key === "Enter") {
+				event.preventDefault();
+				sendReasonButton.click();
+			}
 		});
 	});
 });
