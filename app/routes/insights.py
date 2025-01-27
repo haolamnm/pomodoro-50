@@ -29,7 +29,7 @@ def me() -> RenderResponse:
 	# Get weekly duration
 	durations: list[int] = [pomodoro.duration for pomodoro in pomodoros]
 	start_ats: list[datetime] = [pomodoro.start_at for pomodoro in pomodoros]
-	weekly_durations: dict[str, int] = get_weekly_duration(durations, start_ats)
+	weekly_durations: list[float] = get_weekly_duration(durations, start_ats)
 
 	return render_template(
 		'insights.html',
