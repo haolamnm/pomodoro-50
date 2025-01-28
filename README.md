@@ -1,6 +1,8 @@
 # Pomodoro 50
 
-<!-- Thumbnail -->
+<div>
+	<img src="./app/static/img/preview.png" alt="Screenshot of the Pomodoro 50 app home page" width="100%" title="Screenshot of the Pomodoro 50 app home page">
+</div>
 
 [![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/haolamnm)
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=flat&logo=paypal&logoColor=white)](https://paypal.me/haolamnm)
@@ -23,7 +25,7 @@ In conclusion, with Pomodoro 50, you can:
 
 ### 1. Online access
 
-You can access the website at [Pomodoro 50](https://pomodoro-50.vercel.app/).
+You can access the website at [Pomodoro 50](https://pomodoro-50.vercel.app/home).
 
 ### 2. Local setup
 
@@ -41,6 +43,8 @@ pip install -r requirements.txt
 
 4. Set the environment variables.
 
+> Create a `.env` file in the root directory. Take a look at the `.env.example` [here](./app/logs/.env.example) file for the required environment variables.
+
 5. Run the application.
 
 Connect to the local session system
@@ -55,9 +59,12 @@ python run.py
 
 ## How to use
 
-Start by create your own account via the [register](https://pomodoro-50.vercel.app/register) page. The UI is pretty straightforward, so you should be able to navigate through the website easily.
+Start by create your own account via the [register](https://pomodoro-50.vercel.app/signup/email/) page. The UI is pretty straightforward, so you should be able to navigate through the website easily.
 
 <!-- YouTube Video -->
+<div>
+	<iframe width="100%" src="https://youtu.be/HSemsQzqEoQ" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 ## Inspiration
 
@@ -65,13 +72,13 @@ I was inspired by the actual Pomodoro I used to study which is [Pomofocus](https
 
 ## Technical Stack
 
-1. **Flask**: For routing and backend.
-	+ **Flask-Migrate**, **Flask-Session**, **Flask-SQLAlchemy** for user session and data management.
-	+ **Flask-Mail** for sending reset password email.
+0. **Python**: I used Python 3.13 for this project. [Python](https://docs.python.org/3/).
+1. **Flask**: For routing and backend. [Flask](https://flask.palletsprojects.com/en/stable/).
 2. **PostgreSQL**: I used Supabase as the database, [Supabase](https://supabase.com/).
 3. **Redis**: I used Redis to store the session data, [Upstash](https://upstash.com/).
 4. **Vercel**: I used Vercel to deploy the website, [Vercel](https://vercel.com/).
 5. **Pytest**: I wrote lots of unit tests for this project.
+6. **Gemini**: I used Gemini for the AI assistant, [Gemini](https://ai.google.dev/gemini-api/docs).
 
 ## For Developers
 
