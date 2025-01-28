@@ -61,9 +61,10 @@ python run.py
 
 Start by create your own account via the [register](https://pomodoro-50.vercel.app/signup/email/) page. The UI is pretty straightforward, so you should be able to navigate through the website easily.
 
-<!-- YouTube Video -->
-<div>
-	<iframe width="100%" src="https://youtu.be/HSemsQzqEoQ" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<div align="center">
+	<a href="https://youtu.be/HSemsQzqEoQ" target="_blank">
+		<img src="https://img.youtube.com/vi/HSemsQzqEoQ/0.jpg" alt="Pomodoro 50 demo video" width="100%" title="Pomodoro 50 demo video">
+	</a>
 </div>
 
 ## Inspiration
