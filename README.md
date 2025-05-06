@@ -10,9 +10,11 @@ Pomodoro 50 is a Flask web app I built as a final project for **CS50x 2024**. Th
 
 ## Links
 
-Website: [https://pomodoro-50.vercel.app/home](https://pomodoro-50.vercel.app/home)
-YouTube: [https://youtu.be/HSemsQzqEoQ](https://youtu.be/HSemsQzqEoQ)
-Pomofocus: [https://pomofocus.io/](https://pomofocus.io/)
+Website: [**https://pomodoro-50.vercel.app/home**](https://pomodoro-50.vercel.app/home)
+
+YouTube: [**https://youtu.be/HSemsQzqEoQ**](https://youtu.be/HSemsQzqEoQ)
+
+Pomofocus: [**https://pomofocus.io/**](https://pomofocus.io/)
 
 ## Notes
 
